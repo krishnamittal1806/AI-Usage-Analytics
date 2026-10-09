@@ -3,6 +3,7 @@ package com.krishna.analytics.producer_service.controller;
 import com.krishna.analytics.producer_service.dto.EventAcceptedResponse;
 import com.krishna.analytics.producer_service.dto.EventRequest;
 import com.krishna.analytics.producer_service.service.EventService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventAcceptedResponse> create(@RequestBody EventRequest request){
+    public ResponseEntity<EventAcceptedResponse> create(@Valid @RequestBody EventRequest request){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(eventService.accept(request));
     }
 }

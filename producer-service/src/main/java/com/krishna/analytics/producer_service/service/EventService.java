@@ -1,16 +1,35 @@
 package com.krishna.analytics.producer_service.service;
 
 import com.krishna.analytics.producer_service.dto.EventAcceptedResponse;
+import com.krishna.analytics.producer_service.dto.AnalyticsEvent;
 import com.krishna.analytics.producer_service.dto.EventRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-@Service // it will tell the springBoot to create the bean
+@Service
+@RequiredArgsConstructor
 public class EventService {
-    public EventAcceptedResponse accept(EventRequest eventRequest) {
-        String eventId = UUID.randomUUID().toString();
+    private final MetadataValidator validator;
 
-        return new EventAcceptedResponse(eventId , "ACCEPTED");
+    public EventAcceptedResponse accept(EventRequest eventRequest) {
+        validator.validate(eventRequest.eventType(), eventRequest.metadata());
+        Instant receivedAt = Instant.now();
+        AnalyticsEvent event = new AnalyticsEvent(
+                eventRequest.eventId() != null ? eventRequest.eventId() : UUID.randomUUID(),
+                eventRequest.eventType(),
+                eventRequest.userId(),
+                eventRequest.timestamp() != null ? eventRequest.timestamp() : receivedAt,
+                receivedAt,
+                Collections.unmodifiableMap(new HashMap<>(eventRequest.metadata()))
+        );
+
+        // Day 4: publish event to Kafka here.
+        return new EventAcceptedResponse(event.eventId().toString(), "ACCEPTED");
     }
 }
