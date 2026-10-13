@@ -3,6 +3,7 @@ package com.krishna.analytics.producer_service.service;
 import com.krishna.analytics.producer_service.dto.EventAcceptedResponse;
 import com.krishna.analytics.producer_service.dto.AnalyticsEvent;
 import com.krishna.analytics.producer_service.dto.EventRequest;
+import com.krishna.analytics.producer_service.publisher.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class EventService {
+    private final EventPublisher eventPublisher;
     private final MetadataValidator validator;
 
     public EventAcceptedResponse accept(EventRequest eventRequest) {
@@ -29,7 +31,7 @@ public class EventService {
                 Collections.unmodifiableMap(new HashMap<>(eventRequest.metadata()))
         );
 
-        // Day 4: publish event to Kafka here.
+        eventPublisher.publish(event);
         return new EventAcceptedResponse(event.eventId().toString(), "ACCEPTED");
     }
 }
