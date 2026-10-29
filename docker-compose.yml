@@ -16,3 +16,17 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  postgres:
+    image: postgres:16
+    container_name: analytics-postgres
+    environment:
+      POSTGRES_DB : analytics
+      POSTGRES_USER : analytics
+      POSTGRES_PASSWORD : analytics_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgres/data
+volumes:
+  pgdata:
