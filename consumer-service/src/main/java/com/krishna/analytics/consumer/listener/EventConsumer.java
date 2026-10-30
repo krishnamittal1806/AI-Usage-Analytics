@@ -7,18 +7,20 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.json.JsonMapper;
+import com.krishna.analytics.consumer.service.EventStoreService;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class EventConsumer {
     private final JsonMapper jsonMapper;
+    private final EventStoreService storeService;   // add
 
     @KafkaListener(topics = "${app.kafka.topic}")
     public void consume(ConsumerRecord<String, String> record) {
         AnalyticsEvent event = jsonMapper.readValue(record.value(), AnalyticsEvent.class);
-        log.info("Consumed eventId={} eventType={} userId={} partition={} offset={}",
-                event.eventId(), event.eventType(), event.userId(),
-                record.partition(), record.offset());
+        storeService.store(event);                  // add
+        log.info("Stored eventId={} type={} user={} partition={} offset={}",
+                event.eventId(), event.eventType(), event.userId(), record.partition(), record.offset());
     }
 }
