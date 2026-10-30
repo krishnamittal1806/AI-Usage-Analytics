@@ -1,0 +1,12 @@
+{
+  "eventId": "11111111-1111-1111-1111-111111111111",
+  "eventType": "AI_RESPONSE",
+  "userId": "u1",
+  "metadata": {
+    "requestId": "r2",
+    "model": "gpt-y",
+    "inputTokens": 120,
+    "outputTokens": 300,
+    "latencyMs": 850
+  }
+}

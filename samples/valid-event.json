@@ -1,0 +1,11 @@
+{
+  "eventType": "AI_RESPONSE",
+  "userId": "u1",
+  "metadata": {
+    "requestId": "r1",
+    "model": "gpt-x",
+    "inputTokens": 120,
+    "outputTokens": 300,
+    "latencyMs": 850
+  }
+}
